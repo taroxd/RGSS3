@@ -1,4 +1,4 @@
-# rgss3
+# RGSS3
 
 An attempt to maintain https://github.com/CaptainJet/RM-Gosu.
 
@@ -10,27 +10,27 @@ Depend on:
 * rmagick
 * gosu
 
+It is recommended to use a Q8 version of ImageMagick 6.
+
 ## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'rgss3'
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install rgss3
+gem install rgss3
+```
 
 ## Usage
 
 ```ruby
 require 'rgss3'
 RGSS3.run do
+  # TODO: Add your code here
+  # loop { Graphics.update }
+end
+```
+
+Or with more options:
+```ruby
+require 'rgss3'
+RGSS3.run(width: 544, height: 416, frame_rate: 60, title: "Game") do
   # TODO: Add your code here
   # loop { Graphics.update }
 end

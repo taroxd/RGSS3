@@ -35,5 +35,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.14"
   spec.add_development_dependency "rake", "~> 10.0"
 
-  spec.requirements << 'ImageMagick 6, Q8 recommended'
+  spec.requirements << 'Q8 versions of ImageMagick 6 is recommended'
 end

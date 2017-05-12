@@ -1,0 +1,137 @@
+
+require 'set'
+module Graphics
+
+  class << self
+
+    attr_accessor :frame_count
+    attr_reader :gosu_window
+    attr_reader :brightness, :frame_rate
+
+    def gosu_window
+      RGSS3.window
+    end
+
+    def frame_rate
+      RGSS3.window.frame_rate
+    end
+
+    def brightness=(int)
+      @brightness = [[255, int].min, 0].max
+      @draw_color.alpha = 255 - @brightness
+    end
+
+    def frame_rate=(int)
+      # @frame_rate = [[120, int].min, 10].max
+      #reform_window(width, height, fullscreen?, 1.0 / @frame_rate * 1000)
+    end
+  end
+
+  @brightness = 255
+  @frame_count = 0
+  @frozen = false
+  @draw_color = Gosu::Color.rgba(255, 255, 255, 0)
+  # @draw_color.saturation = 0
+  # @draw_color.alpha = 0
+  @containers = Set.new
+
+  def self.update
+    window = RGSS3.window
+    @current = window.record(window.width, window.height) do
+      @containers.each(&:draw)
+    end
+    @frame_count += 1
+    @latest = @current unless @frozen
+    Fiber.yield
+  end
+
+  def self.wait(duration)
+    duration.times { update }
+  end
+
+  def self.fadeout(duration)
+    # Thread.new {
+    #   rate = @brightness / duration.to_f
+    #   until @brightness <= 0
+    #     self.brightness -= rate
+    #     sleep 1.0 / frame_rate
+    #   end
+    #   self.brightness = 0
+    # }
+  end
+
+  def self.fadein(duration)
+    # Thread.new {
+    #   rate = 255 / duration.to_f
+    #   until @brightness >= 255
+    #     self.brightness += rate
+    #     sleep 1.0 / frame_rate
+    #   end
+    #   self.brightness = 255
+    # }
+  end
+
+  def self.freeze
+    @frozen = true
+  end
+
+  def self.transition(duration = 10, filename = "", vague = 40)
+    @frozen = false
+    # VAGUE ELUDES ME AS TO HOW TO INTEGRATE
+  end
+
+  def self.snap_to_bitmap
+    Bitmap.from_gosu(@current)
+  end
+
+  def self.frame_reset
+    # AT A LOSS ON HOW TO INTEGRATE
+  end
+
+  def self.width
+    RGSS3.window.width
+  end
+
+  def self.height
+    RGSS3.window.height
+  end
+
+  def self.resize_screen(w, h)
+    reform_window(w, h, fullscreen?, RGSS3.update_interval)
+  end
+
+  def self.play_movie(filename)
+    # LIKELY TO REMAIN UNINTEGRATED
+  end
+
+  def self.add_container(container)
+    @containers.add(container)
+  end
+
+  def self.remove_container(container)
+    @containers.delete(container)
+  end
+
+  def self.fullscreen?
+    RGSS3.window.fullscreen?
+  end
+
+  def self.draw
+    if @latest
+      @latest.draw(0, 0, 0)
+      c = @draw_color
+      RGSS3.window.draw_quad(0, 0, c, 0, height, c, width, 0, c, width, height, c, 1)
+    end
+  end
+
+  # def self.set_fullscreen(bool)
+  #   return if bool == fullscreen?
+  #   reform_window(width, height, bool, gosu_window.update_interval)
+  # end
+
+  def self.reform_window(w, h, f, update_interval)
+    # Graphics.gosu_window.close
+    # Graphics.gosu_window = GosuGame.new(w, h, f, update_interval)
+    # Graphics.gosu_window.show
+  end
+end
