@@ -4,7 +4,7 @@ An attempt to maintain https://github.com/CaptainJet/RM-Gosu.
 
 NOT READY TO USE!
 
-At least Ruby 2.3 is required.
+Ruby 2.3 or above is required.
 
 Depend on:
 * rmagick
