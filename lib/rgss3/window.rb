@@ -47,7 +47,6 @@ class Window
     @oy = 0
     @tone = Tone.new
     @opacity = 255
-    super()
   end
 
   def update
