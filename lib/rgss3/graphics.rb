@@ -3,7 +3,7 @@ require 'set'
 module Graphics
 
   class << self
-    attr_reader :frame_count
+    attr_accessor :frame_count
     attr_reader :brightness, :frame_rate
     attr_reader :needs_redraw
   end
@@ -11,7 +11,7 @@ module Graphics
   @brightness = 255
   @frame_count = 0
   @frozen = false
-  @draw_color = Gosu::Color.rgba(255, 255, 255, 0)
+  @draw_color = Gosu::Color.rgba(0, 0, 0, 0)
   @containers = Set.new
 
   def self.update
