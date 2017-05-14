@@ -50,6 +50,7 @@ module RGSS3
     # overwrite
     def draw
     end
+
     # this method is used internally by Graphics
     def do_draw
       return if !@visible || @opacity == 0 || @bitmap.nil? || @bitmap.disposed?

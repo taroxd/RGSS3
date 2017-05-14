@@ -42,7 +42,7 @@ class Window
     @active = true
     @openness = 255
     @visible = true
-    @z = 0
+    @z = 100
     @ox = 0
     @oy = 0
     @tone = Tone.new
