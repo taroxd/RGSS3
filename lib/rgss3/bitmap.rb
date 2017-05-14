@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class Bitmap
 
-  attr_reader :rect, :gosu_image
+  attr_reader :rect
   attr_accessor :font
 
   def initialize(*args)
@@ -29,11 +29,13 @@ class Bitmap
   end
 
   def init_other_attr
-    @rect = Rect.new(0, 0, @gosu_image.width, @gosu_image.height)
+    @rect = Rect.new(0, 0, gosu_image.width, gosu_image.height)
     @font = Font.new
   end
 
   def dispose
+    @gosu_image = nil
+    @rmagick_image = nil
     @disposed = true
   end
 
@@ -42,27 +44,25 @@ class Bitmap
   end
 
   def width
-    @gosu_image.width
+    gosu_image.width
   end
 
   def height
-    @gosu_image.height
+    gosu_image.height
   end
 
-  # untested
   def blt(x, y, src_bitmap, src_rect, opacity = 255)
     # opacity is not supported
     im2 = src_bitmap.gosu_image.subimage(*src_rect)
-    @gosu_image.insert(im2, x, y)
+    gosu_image.insert(im2, x, y)
     set_dirty
   end
 
-  # untested
   def stretch_blt(dest_rect, src_bitmap, src_rect, opacity = 255)
     im2 = src_bitmap.gosu_image.subimage(*src_rect)
     im2 = Bitmap.gosu_to_rmagick(gosu_to_rmagick)
     im2.resize!(dest_rect.width, dest_rect.height)
-    @gosu_image.insert(im2, dest_rect.x, dest_rect.y)
+    gosu_image.insert(im2, dest_rect.x, dest_rect.y)
     set_dirty
   end
 
@@ -79,7 +79,7 @@ class Bitmap
       raise ArgumentError
     end
     img = Magick::Image.new(width, height) { self.background_color = color.to_rmagick_color }
-    @gosu_image.insert(img, x, y)
+    gosu_image.insert(img, x, y)
     set_dirty
   end
 
@@ -107,7 +107,7 @@ class Bitmap
     fill = Magick::GradientFill.new(0, 0, x2, y2, start_color, end_color)
 
     img = Magick::Image.new(width, height, fill)
-    @gosu_image.insert(img, x, y)
+    gosu_image.insert(img, x, y)
     set_dirty
   end
 
@@ -116,19 +116,7 @@ class Bitmap
   end
 
   def clear_rect(*args)
-    case args.size
-    when 1, 4
-      if args[0].is_a?(Rect)
-        x, y, width, height = *args[0].to_a
-      else
-        x, y, width, height = *args
-      end
-    else
-      raise ArgumentError
-    end
-    f = Magick::Image.new(width, height) { self.background_color = 'none' }
-    @gosu_image.insert(f, x, y)
-    set_dirty
+    fill_rect(*args, Color.new)
   end
 
   def get_pixel(x, y)
@@ -139,7 +127,6 @@ class Bitmap
     fill_rect(x, y, 1, 1, color)
   end
 
-  # Untested
   def hue_change(hue)
     image = rmagick_image
     Bitmap.pixel_map!(rmagick_image) do |pixel|
@@ -151,7 +138,6 @@ class Bitmap
   end
 
   def blur
-    # self.rmagick_image = rmagick_image.blur_image
   end
 
   def radial_blur(angle, division)
@@ -180,7 +166,7 @@ class Bitmap
     end
     text_image = Gosu::Image.from_text(string, @font.size, font: @font.first_existant_name)
     x += (width - text_image.width) * (align || 0) / 2
-    y += (height - text_image.height)  / 2
+    y += (height - text_image.height) / 2
     text_image = Bitmap.gosu_to_rmagick(text_image)
     image = text_image.dup
     font_pixel = @font.color.to_pixel
@@ -218,8 +204,6 @@ class Bitmap
     Rect.new(0, 0, f.text_width(string.to_s), f.height)
   end
 
-  # NEW
-
   def self.from_gosu(img)
     bitmap = allocate
     bitmap.initialize_with_gosu_image(img)
@@ -228,7 +212,7 @@ class Bitmap
 
   def self.from_rmagick(img)
     bitmap = allocate
-    bitmap.rmagick_image = img
+    bitmap.initialize_with_rmagick_image(img)
     bitmap
   end
 
@@ -253,6 +237,7 @@ class Bitmap
   # If you want to change it, call set_dirty or bitmap.rmagick_image = image
   # after the change.
   def rmagick_image
+    check_disposed
     if @dirty
       @dirty = false
       @rmagick_image = Bitmap.gosu_to_rmagick(@gosu_image)
@@ -261,26 +246,24 @@ class Bitmap
     end
   end
 
-  def change_image
-    @dirty = true
-  end
-
-  def check_disposed
-    raise RGSSError, "Disposed Bitmap" if @disposed
-  end
-
-  def dispose!
-    @gosu_image = nil
-    @rmagick_image = nil
-    @disposed = true
-  end
-
   def rmagick_image=(image)
+    check_disposed
     @rmagick_image = image
     @gosu_image = Gosu::Image.new(@rmagick_image)
   end
 
+  def gosu_image
+    check_disposed
+    @gosu_image
+  end
+
   def set_dirty
     @dirty = true
+  end
+
+  private
+
+  def check_disposed
+    raise RGSSError, "Disposed Bitmap" if @disposed
   end
 end

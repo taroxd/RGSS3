@@ -18,5 +18,10 @@ module RGSS3
       @color = Color.new
       super()
     end
+
+    def dispose
+      @bitmap = nil
+      super
+    end
   end
 end

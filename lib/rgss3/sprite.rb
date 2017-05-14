@@ -47,7 +47,7 @@ class Sprite
   end
 
   def draw
-    return if !@visible || @opacity == 0 || @bitmap.nil?
+    return if !@visible || @opacity == 0 || @bitmap.nil? || @bitmap.disposed?
     image = @bitmap.gosu_image.subimage(*@src_rect) || @bitmap.gosu_image
     image.draw_rot(@x, @y, @z, @angle, ox.fdiv(width), oy.fdiv(height), @zoom_x * (@mirror ? -1 : 1), @zoom_y, 0xffffffff, BLEND[@blend_type])
   end

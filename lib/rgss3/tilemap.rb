@@ -30,6 +30,31 @@ class Tilemap
     @layers[2].viewport = @viewport
   end
 
+  def map_data=(data)
+    return if @map_data == data
+    @map_data = data
+    refresh
+  end
+
+  def flags=(data)
+    @flags = data
+    refresh
+  end
+
+  def ox=(value)
+    @ox = value
+    for layer in @layers
+      layer.ox = @ox
+    end
+  end
+
+  def oy=(value)
+    @oy = value
+    for layer in @layers
+      layer.oy = @oy
+    end
+  end
+
   def dispose
     for layer in @layers
       layer.bitmap.dispose
@@ -49,6 +74,8 @@ class Tilemap
     @anim_count = (@anim_count + 1) % (@animated_layer.size * 30)
     @layers[0].bitmap = @animated_layer[@anim_count/30]
   end
+
+  private
 
   def refresh
     return if @map_data.nil? || @flags.nil?
@@ -281,31 +308,6 @@ class Tilemap
           @layers[2].bitmap.blt(x * TILESIZE, y * TILESIZE,@bitmaps[5+@map_data[x,y,2]/256],rect)
         end
       end
-    end
-  end
-
-  def map_data=(data)
-    return if @map_data == data
-    @map_data = data
-    refresh
-  end
-
-  def flags=(data)
-    @flags = data
-    refresh
-  end
-
-  def ox=(value)
-    @ox = value
-    for layer in @layers
-      layer.ox = @ox
-    end
-  end
-
-  def oy=(value)
-    @oy = value
-    for layer in @layers
-      layer.oy = @oy
     end
   end
 end
