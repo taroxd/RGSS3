@@ -1,8 +1,8 @@
 # frozen_string_literal: true
-require_relative 'sprite_container'
+require_relative 'container'
 class Sprite
 
-  include RGSS3::SpriteContainer
+  include RGSS3::Container
 
   attr_reader :bush_opacity
   attr_accessor :x, :y
@@ -47,8 +47,7 @@ class Sprite
   end
 
   def draw
-    return if !@visible || @opacity == 0 || @bitmap.nil? || @bitmap.disposed?
-    image = @bitmap.gosu_image.subimage(*@src_rect) || @bitmap.gosu_image
-    image.draw_rot(@x, @y, @z, @angle, ox.fdiv(width), oy.fdiv(height), @zoom_x * (@mirror ? -1 : 1), @zoom_y, 0xffffffff, BLEND[@blend_type])
+    image = bitmap.gosu_image.subimage(*@src_rect) || @bitmap.gosu_image
+    image.draw_rot(@x, @y, @z, @angle, ox.fdiv(width), oy.fdiv(height), @zoom_x * (@mirror ? -1 : 1), @zoom_y, 0xff_ffffff, BLEND[@blend_type])
   end
 end

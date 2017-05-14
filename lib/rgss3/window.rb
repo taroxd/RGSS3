@@ -1,9 +1,9 @@
 # frozen_string_literal: true
-require_relative 'container'
 class Window
 
-  include RGSS3::Container
-
+  attr_accessor :z, :ox, :oy
+  attr_accessor :viewport, :visible
+  attr_accessor :tone
   attr_accessor :windowskin
   attr_accessor :contents
   attr_accessor :cursor_rect
@@ -17,10 +17,10 @@ class Window
   attr_accessor :height
   attr_accessor :padding
   attr_accessor :padding_bottom
-  attr_accessor :opacity
   attr_accessor :back_opacity
   attr_accessor :contents_opacity
   attr_reader :openness
+  attr_reader :opacity
 
   def initialize(*args)
     case args.size
@@ -32,6 +32,7 @@ class Window
     when 4
       @x, @y, @width, @height = args
     end
+    @opacity = 255
     @contents = Bitmap.new(1, 1)
     @cursor_rect = Rect.new
     @padding = 12
@@ -40,6 +41,12 @@ class Window
     @arrows_visible = true
     @active = true
     @openness = 255
+    @visible = true
+    @z = 0
+    @ox = 0
+    @oy = 0
+    @tone = Tone.new
+    @opacity = 255
     super()
   end
 
@@ -65,7 +72,15 @@ class Window
     @openness = [[value, 0].max, 255].min
   end
 
-  def draw
-    # TODO
+  def opacity=(value)
+    @opacity = [[value, 255].min, 0].max
+  end
+
+  def dispose
+    @disposed = true
+  end
+
+  def disposed?
+    @disposed
   end
 end

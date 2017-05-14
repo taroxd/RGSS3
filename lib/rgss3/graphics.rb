@@ -119,7 +119,7 @@ module Graphics
 
   def self.draw
     @needs_redraw = false
-    @containers.each(&:draw)
+    @containers.each(&:do_draw)
     if @brightness < 255
       c = @draw_color
       RGSS3.window.draw_quad(0, 0, c, 0, height, c, width, 0, c, width, height, c, 1)
