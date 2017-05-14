@@ -112,7 +112,7 @@ class Bitmap
   end
 
   def clear
-    self.rmagick_image = Magick::Image.new(width, height)
+    self.rmagick_image = Magick::Image.new(width, height) { self.background_color = 'none' }
   end
 
   def clear_rect(*args)
