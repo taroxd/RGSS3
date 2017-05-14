@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 class Bitmap
 
   attr_reader :rect, :gosu_image
@@ -8,14 +8,8 @@ class Bitmap
     case args.size
     when 1
       basename, = args
-      basename = basename.to_str  # raise error if argument is not string compatible
-      ["".freeze, ".png".freeze, ".jpg".freeze].each do |ext|
-        filename = basename + ext
-        if File.exist?(filename)
-          return initialize_with_gosu_image(Gosu::Image.new(filename))
-        end
-      end
-      raise "File not found: #{basename}"
+      filename = RGSS3::RTP.find!(basename, ['', '.png', 'jpg'])
+      initialize_with_gosu_image Gosu::Image.new(filename)
     when 2
       initialize_with_rmagick_image Magick::Image.new(*args) { self.background_color = 'none' }
     else
@@ -157,7 +151,7 @@ class Bitmap
   end
 
   def blur
-    self.rmagick_image = rmagick_image.blur_image
+    # self.rmagick_image = rmagick_image.blur_image
   end
 
   def radial_blur(angle, division)
@@ -185,6 +179,8 @@ class Bitmap
       string.prepend("<i>") << "</i>"
     end
     text_image = Gosu::Image.from_text(string, @font.size, font: @font.first_existant_name)
+    x += (width - text_image.width) * (align || 0) / 2
+    y += (height - text_image.height)  / 2
     text_image = Bitmap.gosu_to_rmagick(text_image)
     image = text_image.dup
     font_pixel = @font.color.to_pixel

@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 require_relative 'sprite_container'
 class Sprite
 
@@ -52,6 +52,6 @@ class Sprite
 
   def draw
     return if !@visible || @opacity == 0 || @bitmap == nil
-    @bitmap.gosu_image.draw_rot(@x, @y, @z, @angle, 0.0, 0.0, @zoom_x * (@mirror ? -1 : 1), @zoom_y, 0xffffffff, BLEND[@blend_type])
+    @bitmap.gosu_image.draw_rot(@x, @y, @z, @angle, ox.fdiv(width), oy.fdiv(height), @zoom_x * (@mirror ? -1 : 1), @zoom_y, 0xffffffff, BLEND[@blend_type])
   end
 end

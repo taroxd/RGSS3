@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Rect
 
   attr_accessor :x, :y, :width, :height

@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 # Usage:
 # Input.trigger?(2)
 # Input.trigger?(:DOWN)

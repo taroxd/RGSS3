@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module RPG; end
 
 class RPG::AudioFile
@@ -11,7 +12,7 @@ class RPG::AudioFile
   attr_accessor :pitch
 end
 
- 
+
 class RPG::BGM < RPG::AudioFile
   @@last = RPG::BGM.new
   def play(pos = 0)
@@ -119,7 +120,7 @@ class RPG::Tileset
   attr_accessor :tileset_names
   attr_accessor :flags
   attr_accessor :note
-end  
+end
 class RPG::Map
   def initialize(width, height)
     @display_name = ''

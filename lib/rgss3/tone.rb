@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 class Tone
-  
+
   attr_reader :red, :green, :blue, :gray
-  
+
   def initialize(*args)
     case args.size
     when 0
@@ -15,7 +16,7 @@ class Tone
       raise ArgumentError
     end
   end
-  
+
   def set(*args)
     case args.size
     when 1
@@ -36,33 +37,33 @@ class Tone
       raise ArgumentError
     end
   end
-  
+
   def red=(int)
     @red = [[255, int].min, -255].max.to_f
   end
-  
+
   def green=(int)
     @green = [[255, int].min, -255].max.to_f
   end
-  
+
   def blue=(int)
     @blue = [[255, int].min, -255].max.to_f
   end
-  
+
   def gray=(int)
     @gray = [[255, int].min, 0].max.to_f
   end
-  
+
   def _dump(d = 0)
     [@red, @green, @blue, @gray].pack('d4')
   end
-   
+
   def self._load(s)
     Tone.new(*s.unpack('d4'))
   end
-  
+
   # NEW
-  
+
   def to_a
     [red, green, blue, gray]
   end

@@ -30,6 +30,7 @@ end
 Or with more options:
 ```ruby
 require 'rgss3'
+RGSS3::RTP.path = 'path/to/RTP'
 RGSS3.run(width: 544, height: 416, frame_rate: 60, title: "Game") do
   # TODO: Add your code here
   # loop { Graphics.update }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Color
 
   attr_accessor :gosu_color

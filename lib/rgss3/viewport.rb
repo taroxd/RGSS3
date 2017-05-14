@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 class Viewport
-  
+
   attr_accessor :color, :tone, :rect, :visible, :z, :ox, :oy
-  
+
   def initialize(*args)
     case args.size
     when 0
@@ -22,20 +23,20 @@ class Viewport
     @ox = 0
     @oy = 0
   end
-  
+
   def dispose
     @disposed = true
   end
-  
+
   def disposed?
     @disposed
   end
-  
+
   def flash(color, duration)
     @flash_color = color || Color.new(0, 0, 0, 0)
     @flash_duration = duration
   end
-  
+
   def update
     @flash_duration = [@flash_duration - 1, 0].max
     @flash_color = nil if @flash_duration == 0

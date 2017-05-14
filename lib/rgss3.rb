@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "rgss3/version"
 
 require 'gosu'
@@ -24,6 +25,7 @@ require_relative 'rgss3/tilemap'
 require_relative 'rgss3/tone'
 require_relative 'rgss3/viewport'
 require_relative 'rgss3/window'
+require_relative 'rgss3/rtp'
 
 module RGSS3
   class << self

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative 'container'
 class Window
 
@@ -19,7 +20,7 @@ class Window
   attr_accessor :opacity
   attr_accessor :back_opacity
   attr_accessor :contents_opacity
-  attr_accessor :openness
+  attr_reader :openness
 
   def initialize(*args)
     case args.size
@@ -31,6 +32,14 @@ class Window
     when 4
       @x, @y, @width, @height = args
     end
+    @contents = Bitmap.new(1, 1)
+    @cursor_rect = Rect.new
+    @padding = 12
+    @padding_bottom = 8
+    @pause = false
+    @arrows_visible = true
+    @active = true
+    @openness = 255
     super()
   end
 
@@ -45,11 +54,15 @@ class Window
   end
 
   def open?
-    openness == 255
+    @openness == 255
   end
 
   def close?
-    openness == 0
+    @openness == 0
+  end
+
+  def openness=(value)
+    @openness = [[value, 0].max, 255].min
   end
 
   def draw

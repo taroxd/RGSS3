@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 module RGSS3
   # common methods for Plane, Sprite and Window
   module Container
@@ -14,6 +14,7 @@ module RGSS3
       @ox = 0
       @oy = 0
       @opacity = 255
+      @tone = Tone.new
       Graphics.add_container(self)
     end
 

@@ -1,21 +1,20 @@
+# frozen_string_literal: true
 module Audio
 
-  module_function
-
-  def setup_midi
+  def self.setup_midi
   end
 
-  def bgm_play(filename, volume = 100, pitch = 100, pos = 0)
+  def self.bgm_play(filename, volume = 100, pitch = 100, pos = 0)
     bgm_stop
-    @bgm = Gosu::Sample.new(filename).play(volume / 100.0, pitch / 100.0, true)
+    @bgm = new_sample(filename).play(volume / 100.0, pitch / 100.0, true)
     @bgm_volume = volume / 100.0
   end
 
-  def bgm_stop
+  def self.bgm_stop
     @bgm.stop if @bgm
   end
 
-  def bgm_fade(time)
+  def self.bgm_fade(time)
     bgm_stop
     # return unless @bgm
     # Thread.new {
@@ -29,21 +28,21 @@ module Audio
     # }
   end
 
-  def bgm_pos
+  def self.bgm_pos
     0 # Incapable of integration at the time
   end
 
-  def bgs_play(filename, volume = 100, pitch = 100, pos = 0)
+  def self.bgs_play(filename, volume = 100, pitch = 100, pos = 0)
     bgs_stop
-    @bgs = Gosu::Sample.new(filename).play(volume / 100.0, pitch / 100.0, true)
+    @bgs = new_sample.play(volume / 100.0, pitch / 100.0, true)
     @bgs_volume = volume / 100.0
   end
 
-  def bgs_stop
+  def self.bgs_stop
     @bgs.stop if @bgs
   end
 
-  def bgs_fade(time)
+  def self.bgs_fade(time)
     bgs_stop
     # return unless @bgs
     # Thread.new {
@@ -57,23 +56,23 @@ module Audio
     # }
   end
 
-  def bgs_pos
+  def self.bgs_pos
     0 # Incapable of integration at the time
   end
 
-  def me_play(filename, volume = 100, pitch = 100)
+  def self.me_play(filename, volume = 100, pitch = 100)
     me_stop
     @bgm.pause if @bgm
-    @me = Gosu::Sample.new(filename).play(volume / 100.0, pitch / 100.0, false)
+    @me = new_sample.play(volume / 100.0, pitch / 100.0, false)
     @me_volume = volume / 100.0
   end
 
-  def me_stop
+  def self.me_stop
     @me.stop if @me
     @bgm.resume if @bgm && @bgm.paused?
   end
 
-  def me_fade(time)
+  def self.me_fade(time)
     me_stop
     # return unless @me
     # Thread.new {
@@ -87,10 +86,17 @@ module Audio
     # }
   end
 
-  def se_play(filename, volume = 100, pitch = 100)
-    Gosu::Sample.new(filename).play(volume / 100.0, pitch / 100.0, false)
+  def self.se_play(filename, volume = 100, pitch = 100)
+    new_sample(filename).play(volume / 100.0, pitch / 100.0, false)
   end
 
-  def se_stop
+  def self.se_stop
+  end
+
+  private
+
+  def self.new_sample(filename)
+    filename = RGSS3::RTP.find!(filename, ['', '.ogg', '.wav', '.mp3', '.midi'])
+    Gosu::Sample.new(filename)
   end
 end

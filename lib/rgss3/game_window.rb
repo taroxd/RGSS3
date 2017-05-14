@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+require 'fiber'
 module RGSS3
   class GameWindow < Gosu::Window
     attr_reader :frame_rate

@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 require_relative 'sprite_container'
 class Plane
   include RGSS3::SpriteContainer
