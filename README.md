@@ -30,7 +30,7 @@ end
 Or with more options:
 ```ruby
 require 'rgss3'
-RGSS3.run(width: 544, height: 416, frame_rate: 60, title: 'Game', rtp: 'path/to/rtp') do
+RGSS3.run(width: 544, height: 416, frame_rate: 60, fullscreen: false, title: 'Game', rtp: 'path/to/rtp') do
   # TODO: Add your code here
   # loop { Graphics.update }
 end

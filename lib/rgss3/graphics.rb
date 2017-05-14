@@ -15,22 +15,14 @@ module Graphics
   @containers = Set.new
 
   def self.update
-    # window = RGSS3.window
-    # @current = window.record(window.width, window.height) do
-    #   @containers.each(&:draw)
-    # end
+    @needs_redraw = true unless @frozen
     @frame_count += 1
-
-    unless @frozen
-      @needs_redraw = true
-      # @latest = @current
-    end
-
     Fiber.yield
   end
 
-  # no need to redraw during wait
   def self.wait(duration)
+    @needs_redraw = true unless @frozen
+    # no need to redraw during wait
     duration.times do
       @frame_count += 1
       Fiber.yield
@@ -39,26 +31,10 @@ module Graphics
 
   def self.fadeout(duration)
     @brightness = 0
-    # Thread.new {
-    #   rate = @brightness / duration.to_f
-    #   until @brightness <= 0
-    #     self.brightness -= rate
-    #     sleep 1.0 / frame_rate
-    #   end
-    #   self.brightness = 0
-    # }
   end
 
   def self.fadein(duration)
     @brightness = 255
-    # Thread.new {
-    #   rate = 255 / duration.to_f
-    #   until @brightness >= 255
-    #     self.brightness += rate
-    #     sleep 1.0 / frame_rate
-    #   end
-    #   self.brightness = 255
-    # }
   end
 
   def self.freeze
@@ -86,8 +62,8 @@ module Graphics
     RGSS3.window.height
   end
 
-  def self.resize_screen(w, h)
-    reform_window(w, h, RGSS3.window.fullscreen?, RGSS3.update_interval)
+  def self.resize_screen(width, height)
+    reform_window(width: width, height: height)
   end
 
   def self.gosu_window
@@ -98,14 +74,19 @@ module Graphics
     RGSS3.window.frame_rate
   end
 
-  def self.brightness=(int)
-    @brightness = [[255, int].min, 0].max
+  def self.brightness=(value)
+    @brightness = [[255, value].min, 0].max
     @draw_color.alpha = 255 - @brightness
   end
 
-  def self.frame_rate=(int)
-    # @frame_rate = [[120, int].min, 10].max
-    #reform_window(width, height, fullscreen?, 1.0 / @frame_rate * 1000)
+  def self.frame_rate=(value)
+    @frame_rate = [[120, value].min, 10].max
+    reform_window(
+      width: width,
+      height: height,
+      fullscreen: RGSS3.window.fullscreen?,
+      frame_rate: @frame_rate,
+      title: RGSS3.window.caption)
   end
 
   def self.play_movie(filename)
@@ -128,14 +109,22 @@ module Graphics
     end
   end
 
-  # def self.set_fullscreen(bool)
-  #   return if bool == fullscreen?
-  #   reform_window(width, height, bool, gosu_window.update_interval)
-  # end
+  def self.reform_window(
+    width: RGSS3.window.width,
+    height: RGSS3.window.height,
+    full_screen: RGSS3.window.fullscreen?,
+    frame_rate: @frame_rate,
+    title: RGSS3.window.caption,
+    rtp: nil)
 
-  def self.reform_window(w, h, f, update_interval)
-    Graphics.gosu_window.close
-    Graphics.gosu_window = GosuGame.new(w, h, f, update_interval)
-    Graphics.gosu_window.show
+    RGSS3.window.close
+    RGSS3.window = RGSS3::GameWindow.new(
+      width: width,
+      height: height,
+      fullscreen: fullscreen,
+      frame_rate: frame_rate,
+      title: title,
+      rtp: rtp)
+    RGSS3.window.show
   end
 end
