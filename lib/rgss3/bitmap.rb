@@ -214,8 +214,8 @@ class Bitmap
   end
 
   def text_size(string)
-    f = Gosu::Font.new(@font.size, font: @font.first_existant_name)
-    Rect.new(0, 0, f.text_width(string.to_s, f.height))
+    f = Gosu::Font.new(@font.size, name: @font.first_existant_name)
+    Rect.new(0, 0, f.text_width(string.to_s), f.height)
   end
 
   # NEW

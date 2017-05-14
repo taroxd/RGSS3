@@ -24,13 +24,9 @@ class Sprite
   end
 
   def flash(color, duration)
-    @flash_color = color || Color.new(0, 0, 0, 0)
-    @duration = duration
   end
 
   def update
-    @duration = [@duration - 1, 0].max
-    @flash_color = nil if @duration == 0
   end
 
   def width
@@ -52,6 +48,7 @@ class Sprite
 
   def draw
     return if !@visible || @opacity == 0 || @bitmap == nil
-    @bitmap.gosu_image.draw_rot(@x, @y, @z, @angle, ox.fdiv(width), oy.fdiv(height), @zoom_x * (@mirror ? -1 : 1), @zoom_y, 0xffffffff, BLEND[@blend_type])
+    image = @bitmap.gosu_image.subimage(*@src_rect)
+    image.draw_rot(@x, @y, @z, @angle, ox.fdiv(width), oy.fdiv(height), @zoom_x * (@mirror ? -1 : 1), @zoom_y, 0xffffffff, BLEND[@blend_type])
   end
 end

@@ -50,6 +50,7 @@ module Graphics
   end
 
   def self.fadeout(duration)
+    @brightness = 0
     # Thread.new {
     #   rate = @brightness / duration.to_f
     #   until @brightness <= 0
@@ -61,6 +62,7 @@ module Graphics
   end
 
   def self.fadein(duration)
+    @brightness = 255
     # Thread.new {
     #   rate = 255 / duration.to_f
     #   until @brightness >= 255
@@ -77,7 +79,7 @@ module Graphics
 
   def self.transition(duration = 10, filename = "", vague = 40)
     @frozen = false
-    # VAGUE ELUDES ME AS TO HOW TO INTEGRATE
+    @brightness = 255
   end
 
   def self.snap_to_bitmap
@@ -85,7 +87,7 @@ module Graphics
   end
 
   def self.frame_reset
-    # AT A LOSS ON HOW TO INTEGRATE
+    Fiber.yield
   end
 
   def self.width
@@ -97,11 +99,10 @@ module Graphics
   end
 
   def self.resize_screen(w, h)
-    reform_window(w, h, fullscreen?, RGSS3.update_interval)
+    reform_window(w, h, RGSS3.window.fullscreen?, RGSS3.update_interval)
   end
 
   def self.play_movie(filename)
-    # LIKELY TO REMAIN UNINTEGRATED
   end
 
   def self.add_container(container)
@@ -112,15 +113,13 @@ module Graphics
     @containers.delete(container)
   end
 
-  def self.fullscreen?
-    RGSS3.window.fullscreen?
-  end
-
   def self.draw
     if @latest
       @latest.draw(0, 0, 0)
-      c = @draw_color
-      RGSS3.window.draw_quad(0, 0, c, 0, height, c, width, 0, c, width, height, c, 1)
+      if @brightness < 255
+        c = @draw_color
+        RGSS3.window.draw_quad(0, 0, c, 0, height, c, width, 0, c, width, height, c, 1)
+      end
     end
   end
 

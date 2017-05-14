@@ -22,6 +22,8 @@ class Viewport
     @z = 0
     @ox = 0
     @oy = 0
+    @color = Color.new
+    @tone = Tone.new
   end
 
   def dispose
@@ -33,12 +35,12 @@ class Viewport
   end
 
   def flash(color, duration)
-    @flash_color = color || Color.new(0, 0, 0, 0)
-    @flash_duration = duration
+    # @flash_color = color || Color.new(0, 0, 0, 0)
+    # @flash_duration = duration
   end
 
   def update
-    @flash_duration = [@flash_duration - 1, 0].max
-    @flash_color = nil if @flash_duration == 0
+    # @flash_duration = [@flash_duration - 1, 0].max
+    # @flash_color = nil if @flash_duration == 0
   end
 end
