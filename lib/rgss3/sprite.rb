@@ -19,7 +19,7 @@ class Sprite
     @bush_depth = 0
     @bush_opacity = 128
     @wave_speed = 360
-    @src_rect = Rect.new(0, 0, 0, 0)
+    @src_rect = Rect.new
     super
   end
 

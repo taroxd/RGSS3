@@ -52,17 +52,33 @@ class Bitmap
   end
 
   def blt(x, y, src_bitmap, src_rect, opacity = 255)
-    # opacity is not supported
-    im2 = src_bitmap.gosu_image.subimage(*src_rect)
-    gosu_image.insert(im2, x, y)
+    return if opacity == 0
+    src = src_bitmap.gosu_image.subimage(*src_rect)
+    if opacity != 255
+      src = Bitmap.gosu_to_rmagick(src)
+      ratio = opacity / 255.0
+      Bitmap.pixel_map!(src) do |pixel|
+        pixel.opacity *= ratio
+        pixel
+      end
+    end
+    gosu_image.insert(src, x, y)
     set_dirty
   end
 
   def stretch_blt(dest_rect, src_bitmap, src_rect, opacity = 255)
-    im2 = src_bitmap.gosu_image.subimage(*src_rect)
-    im2 = Bitmap.gosu_to_rmagick(gosu_to_rmagick)
-    im2.resize!(dest_rect.width, dest_rect.height)
-    gosu_image.insert(im2, dest_rect.x, dest_rect.y)
+    return if opacity == 0
+    src = src_bitmap.gosu_image.subimage(*src_rect)
+    src = Bitmap.gosu_to_rmagick(gosu_to_rmagick)
+    src.resize!(dest_rect.width, dest_rect.height)
+    if opacity != 255
+      ratio = opacity / 255.0
+      Bitmap.pixel_map!(src) do |pixel|
+        pixel.opacity *= ratio
+        pixel
+      end
+    end
+    gosu_image.insert(src, dest_rect.x, dest_rect.y)
     set_dirty
   end
 

@@ -76,6 +76,7 @@ class Window
 
   def openness=(value)
     @openness = [[value, 0].max, 255].min
+    update_contents_opacity
   end
 
   def opacity=(value)
@@ -144,7 +145,7 @@ class Window
   private
 
   def update_contents_opacity
-    @contents_sprite.opacity = @contents_opacity * @opacity / 255
+    @contents_sprite.opacity = @contents_opacity * @opacity * @openness / 255 / 255
   end
 
   def each_internal_sprite
