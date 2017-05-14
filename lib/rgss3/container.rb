@@ -44,7 +44,7 @@ module RGSS3
     end
 
     def opacity=(value)
-      @opacity = [[value, 255].min, 0].max
+      @opacity = [[value, 0].max, 255].mins
     end
 
     # overwrite

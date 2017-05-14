@@ -17,8 +17,8 @@ class Window
   attr_accessor :height
   attr_reader :padding
   attr_accessor :padding_bottom
-  attr_accessor :back_opacity
-  attr_accessor :contents_opacity
+  attr_reader :back_opacity
+  attr_reader :contents_opacity
   attr_reader :openness
   attr_reader :opacity
 
@@ -46,7 +46,8 @@ class Window
     @ox = 0
     @oy = 0
     @tone = Tone.new
-    @opacity = 255
+    @back_opacity = 192
+    @contents_opacity = 255
   end
 
   def update
@@ -76,7 +77,15 @@ class Window
   end
 
   def opacity=(value)
-    @opacity = [[value, 255].min, 0].max
+    @opacity = [[value, 0].max, 255].min
+  end
+
+  def back_opacity=(value)
+    @back_opacity = [[value, 0].max, 255].min
+  end
+
+  def contents_opacity=(value)
+    @contents_opacity = [[value, 0].max, 255].min
   end
 
   def dispose
