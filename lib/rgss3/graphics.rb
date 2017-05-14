@@ -49,8 +49,12 @@ module Graphics
     Fiber.yield
   end
 
+  # no need to redraw during wait
   def self.wait(duration)
-    duration.times { update }
+    duration.times do
+      @frame_count += 1
+      Fiber.yield
+    end
   end
 
   def self.fadeout(duration)
