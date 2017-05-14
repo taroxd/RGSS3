@@ -104,8 +104,7 @@ module Graphics
     @needs_redraw = false
     @containers.each(&:do_draw)
     if @brightness < 255
-      c = @draw_color
-      RGSS3.window.draw_quad(0, 0, c, 0, height, c, width, 0, c, width, height, c, 1)
+      Gosu.draw_rect(0, 0, width, height, @draw_color, 2147483647)
     end
   end
 
