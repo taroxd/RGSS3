@@ -15,7 +15,7 @@ class Window
   attr_accessor :y
   attr_accessor :width
   attr_accessor :height
-  attr_accessor :padding
+  attr_reader :padding
   attr_accessor :padding_bottom
   attr_accessor :back_opacity
   attr_accessor :contents_opacity
@@ -35,7 +35,7 @@ class Window
     @opacity = 255
     @contents = Bitmap.new(1, 1)
     @cursor_rect = Rect.new
-    @padding = 12
+    @padding = 8
     @padding_bottom = 8
     @pause = false
     @arrows_visible = true
@@ -57,6 +57,10 @@ class Window
     @y = y
     @width = width
     @height = height
+  end
+
+  def padding=(value)
+    @padding = @padding_bottom = value
   end
 
   def open?
