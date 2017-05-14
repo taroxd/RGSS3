@@ -2,7 +2,7 @@
 require 'fiber'
 module RGSS3
   class GameWindow < Gosu::Window
-    attr_reader :frame_rate
+    attr_reader :frame_rate, :title
     def initialize(width: 544, height: 416, full_screen: false, frame_rate: 60, title: "Game", rtp: nil)
       @frame_rate = frame_rate
       RTP.path = rtp if rtp
@@ -19,6 +19,10 @@ module RGSS3
 
     def draw
       Graphics.draw
+    end
+
+    def needs_redraw?
+      Graphics.needs_redraw
     end
   end
 end

@@ -153,7 +153,8 @@ module Input
         dir
       end
     end
-    return dir8, dir8 if [2, 4, 5, 6, 8].include?(dir8)
+    return 0, 0 if dir8 == 5
+    return dir8, dir8 if [2, 4, 6, 8].include?(dir8)
     return dir4, dir8
   end
 end

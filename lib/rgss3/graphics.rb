@@ -7,6 +7,7 @@ module Graphics
     attr_accessor :frame_count
     attr_reader :gosu_window
     attr_reader :brightness, :frame_rate
+    attr_reader :needs_redraw
 
     def gosu_window
       RGSS3.window
@@ -31,17 +32,20 @@ module Graphics
   @frame_count = 0
   @frozen = false
   @draw_color = Gosu::Color.rgba(255, 255, 255, 0)
-  # @draw_color.saturation = 0
-  # @draw_color.alpha = 0
   @containers = Set.new
 
   def self.update
-    window = RGSS3.window
-    @current = window.record(window.width, window.height) do
-      @containers.each(&:draw)
-    end
+    # window = RGSS3.window
+    # @current = window.record(window.width, window.height) do
+    #   @containers.each(&:draw)
+    # end
     @frame_count += 1
-    @latest = @current unless @frozen
+
+    unless @frozen
+      @needs_redraw = true
+      # @latest = @current
+    end
+
     Fiber.yield
   end
 
@@ -83,7 +87,7 @@ module Graphics
   end
 
   def self.snap_to_bitmap
-    Bitmap.from_gosu(@current)
+    Bitmap.new(width, height)
   end
 
   def self.frame_reset
@@ -114,12 +118,11 @@ module Graphics
   end
 
   def self.draw
-    if @latest
-      @latest.draw(0, 0, 0)
-      if @brightness < 255
-        c = @draw_color
-        RGSS3.window.draw_quad(0, 0, c, 0, height, c, width, 0, c, width, height, c, 1)
-      end
+    @needs_redraw = false
+    @containers.each(&:draw)
+    if @brightness < 255
+      c = @draw_color
+      RGSS3.window.draw_quad(0, 0, c, 0, height, c, width, 0, c, width, height, c, 1)
     end
   end
 
@@ -129,8 +132,8 @@ module Graphics
   # end
 
   def self.reform_window(w, h, f, update_interval)
-    # Graphics.gosu_window.close
-    # Graphics.gosu_window = GosuGame.new(w, h, f, update_interval)
-    # Graphics.gosu_window.show
+    Graphics.gosu_window.close
+    Graphics.gosu_window = GosuGame.new(w, h, f, update_interval)
+    Graphics.gosu_window.show
   end
 end
