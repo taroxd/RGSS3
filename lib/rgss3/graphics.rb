@@ -3,29 +3,9 @@ require 'set'
 module Graphics
 
   class << self
-
-    attr_accessor :frame_count
-    attr_reader :gosu_window
+    attr_reader :frame_count
     attr_reader :brightness, :frame_rate
     attr_reader :needs_redraw
-
-    def gosu_window
-      RGSS3.window
-    end
-
-    def frame_rate
-      RGSS3.window.frame_rate
-    end
-
-    def brightness=(int)
-      @brightness = [[255, int].min, 0].max
-      @draw_color.alpha = 255 - @brightness
-    end
-
-    def frame_rate=(int)
-      # @frame_rate = [[120, int].min, 10].max
-      #reform_window(width, height, fullscreen?, 1.0 / @frame_rate * 1000)
-    end
   end
 
   @brightness = 255
@@ -108,6 +88,24 @@ module Graphics
 
   def self.resize_screen(w, h)
     reform_window(w, h, RGSS3.window.fullscreen?, RGSS3.update_interval)
+  end
+
+  def self.gosu_window
+    RGSS3.window
+  end
+
+  def self.frame_rate
+    RGSS3.window.frame_rate
+  end
+
+  def self.brightness=(int)
+    @brightness = [[255, int].min, 0].max
+    @draw_color.alpha = 255 - @brightness
+  end
+
+  def self.frame_rate=(int)
+    # @frame_rate = [[120, int].min, 10].max
+    #reform_window(width, height, fullscreen?, 1.0 / @frame_rate * 1000)
   end
 
   def self.play_movie(filename)

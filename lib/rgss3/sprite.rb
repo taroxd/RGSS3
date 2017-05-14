@@ -20,7 +20,7 @@ class Sprite
     @bush_opacity = 128
     @wave_speed = 360
     @src_rect = Rect.new(0, 0, 0, 0)
-    super()
+    super
   end
 
   def flash(color, duration)
@@ -47,7 +47,33 @@ class Sprite
   end
 
   def draw
-    image = bitmap.gosu_image.subimage(*@src_rect) || @bitmap.gosu_image
-    image.draw_rot(@x, @y, @z, @angle, ox.fdiv(width), oy.fdiv(height), @zoom_x * (@mirror ? -1 : 1), @zoom_y, 0xff_ffffff, BLEND[@blend_type])
+    if viewport
+      x = @x + viewport.rect.x
+      y = @y + viewport.rect.y
+      w = [width - viewport.ox, viewport.rect.x + viewport.rect.width - x].min
+      h = [height - viewport.oy, viewport.rect.y + viewport.rect.height - y].min
+      return if w <= 0 || h <= 0
+      z = @z + (viewport.z << 12)
+      src_x = @src_rect.x + viewport.ox
+      src_y = @src_rect.y + viewport.oy
+    else
+      x = @x
+      y = @y
+      z = @z
+      src_x, src_y, w, h = *@src_rect
+    end
+    image = bitmap.gosu_image.subimage(src_x, src_y, w, h)
+    return unless image
+    image.draw_rot(
+      x,
+      y,
+      z,
+      @angle,
+      ox.fdiv(width),
+      oy.fdiv(height),
+      @zoom_x * (@mirror ? -1 : 1),
+      @zoom_y,
+      0xff_ffffff,
+      BLEND[@blend_type])
   end
 end

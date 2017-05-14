@@ -10,7 +10,8 @@ module ::Kernel
   end
 
   def rgss_stop
-    loop { Graphics.update }
+    Graphics.update
+    loop { Fiber.yield }
   end
 
   def load_data(filename)
