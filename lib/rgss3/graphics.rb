@@ -81,12 +81,7 @@ module Graphics
 
   def self.frame_rate=(value)
     @frame_rate = [[120, value].min, 10].max
-    reform_window(
-      width: width,
-      height: height,
-      fullscreen: RGSS3.window.fullscreen?,
-      frame_rate: @frame_rate,
-      title: RGSS3.window.caption)
+    reform_window
   end
 
   def self.play_movie(filename)
@@ -102,9 +97,10 @@ module Graphics
 
   def self.draw
     @needs_redraw = false
+    return if @brightness == 0
     @containers.each(&:do_draw)
     if @brightness < 255
-      Gosu.draw_rect(0, 0, width, height, @draw_color, 2147483647)
+      Gosu.draw_rect(0, 0, width, height, Gosu::Color.rgba(0, 0, 0, 255 - @brightness), 2147483647)
     end
   end
 
