@@ -21,7 +21,7 @@ module Input
     Y: 15,
     Z: 16,
     L: 17,
-    R:  18,
+    R: 18,
 
     SHIFT: 21,
     CTRL: 22,
