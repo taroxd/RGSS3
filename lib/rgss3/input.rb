@@ -34,8 +34,6 @@ module Input
     F9: 29
   }
 
-  KEY_TO_INT_PROC = KEY_TO_INT.to_proc
-
   KEY_TO_INT.each_key do |sym|
     const_set sym, sym
   end
@@ -77,7 +75,7 @@ module Input
   REVERSE_KEY_MAPPER = {}
 
   KEY_MAPPER.each do |kb_key, syms|
-    keys = Array(syms).map(&KEY_TO_INT_PROC)
+    keys = Array(syms).map(&KEY_TO_INT)
     keys.each do |key|
       REVERSE_KEY_MAPPER[key] ||= []
       REVERSE_KEY_MAPPER[key].push(kb_key)
